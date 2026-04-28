@@ -1,38 +1,179 @@
+/* Main app container - full viewport height with light gray background */
 .App {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+/* Header section - blue background with white text */
+.App-header {
+  background-color: #0078d4;
+  color: white;
+  padding: 1.5rem 2rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+}
+
+.App-header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+/* Filter controls container - white card with shadow */
+.filters-container {
+  background-color: white;
+  margin: 2rem;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.filters-container h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: #333;
+  font-size: 1.3rem;
+}
+
+/* Grid layout for filter dropdowns - responsive, auto-fits columns */
+.filters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Auto-fit columns with min 200px width */
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* Individual filter item - stacks label above dropdown */
+.filter-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-item label {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+/* Dropdown select styling */
+.filter-item select {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  background-color: white;
+  cursor: pointer;
+}
+
+/* Blue focus ring when dropdown is selected */
+.filter-item select:focus {
+  outline: none;
+  border-color: #0078d4;
+  box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.2);
+}
+
+/* Clear filters button styling */
+.clear-button {
+  padding: 0.5rem 1rem;
+  background-color: #0078d4;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  align-self: flex-end; /* Aligns button to bottom of grid cell */
+  margin-top: auto;
+}
+
+/* Darker blue on hover */
+.clear-button:hover {
+  background-color: #005a9e;
+}
+
+/* Results count text - shows "X of Y projects" */
+.results-count {
+  color: #666;
+  font-size: 0.95rem;
+  margin: 0;
+  padding-top: 0.5rem;
+  border-top: 1px solid #eee;
+}
+
+/* Table container - enables both horizontal and vertical scrolling */
+.table-container {
+  margin: 0 2rem 2rem 2rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  overflow-x: auto; /* Horizontal scroll for wide table (34 columns) */
+  max-height: 600px; /* Limits height to show ~8 rows */
+  overflow-y: auto; /* Vertical scroll for additional rows */
+}
+
+/* Table styling - full width with collapsed borders */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+/* Table header - sticky positioning keeps it visible when scrolling vertically */
+.data-table thead {
+  background-color: #f8f9fa;
+  position: sticky; /* Stays at top when scrolling */
+  top: 0;
+  z-index: 10; /* Ensures header stays above table body */
+}
+
+/* Table header cells - bold text with no wrapping */
+.data-table th {
+  padding: 1rem 0.75rem;
+  text-align: left;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 2px solid #dee2e6;
+  white-space: nowrap; /* Prevents column headers from wrapping */
+}
+
+/* Table data cells */
+.data-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #dee2e6;
+  color: #555;
+}
+
+/* Highlight row on hover for better readability */
+.data-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* RAG status styling - Green indicator */
+.rag-green {
+  background-color: #d4edda; /* Light green background */
+  color: #155724; /* Dark green text */
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* RAG status styling - Amber indicator */
+.rag-amber {
+  background-color: #fff3cd; /* Light yellow background */
+  color: #856404; /* Dark yellow/brown text */
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  text-align: center;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* RAG status styling - Red indicator */
+.rag-red {
+  background-color: #f8d7da; /* Light red background */
+  color: #721c24; /* Dark red text */
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  text-align: center;
 }
