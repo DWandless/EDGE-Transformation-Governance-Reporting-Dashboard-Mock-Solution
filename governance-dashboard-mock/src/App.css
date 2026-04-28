@@ -100,14 +100,95 @@
   border-top: 1px solid #eee;
 }
 
+/* Compliance Attribute Filters Section */
+.compliance-filters-container {
+  background-color: white;
+  margin: 0 2rem 2rem 2rem;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Header row with title and clear button */
+.compliance-filters-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.compliance-filters-header h3 {
+  margin: 0;
+  color: #333;
+  font-size: 1.2rem;
+}
+
+/* Clear all compliance filters button */
+.clear-compliance-button {
+  padding: 0.4rem 0.8rem;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.clear-compliance-button:hover {
+  background-color: #c82333;
+}
+
+/* Grid layout for compliance toggle buttons */
+.compliance-filters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 0.75rem;
+}
+
+/* Individual compliance toggle button - inactive state */
+.compliance-toggle {
+  padding: 0.6rem 1rem;
+  background-color: #f8f9fa;
+  color: #495057;
+  border: 2px solid #dee2e6;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+/* Hover effect for inactive toggle buttons */
+.compliance-toggle:hover {
+  background-color: #e9ecef;
+  border-color: #adb5bd;
+}
+
+/* Active state for compliance toggle buttons */
+.compliance-toggle.active {
+  background-color: #0078d4;
+  color: white;
+  border-color: #0078d4;
+  font-weight: 600;
+}
+
+/* Hover effect for active toggle buttons */
+.compliance-toggle.active:hover {
+  background-color: #005a9e;
+  border-color: #005a9e;
+}
+
 /* Table container - enables both horizontal and vertical scrolling */
 .table-container {
-  margin: 0 2rem 2rem 2rem;
+  margin: 0 auto 2rem auto; /* Centers the container horizontally */
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   overflow-x: auto; /* Horizontal scroll for wide table (34 columns) */
-  max-height: 600px; /* Limits height to show ~8 rows */
+  max-height: 350px; /* Limits height to show ~4 rows */
+  max-width: 93%; /* Limits width to 93% of parent */
   overflow-y: auto; /* Vertical scroll for additional rows */
 }
 

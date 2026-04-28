@@ -35,6 +35,22 @@ function App() {
     projectManagers: []
   });
 
+  // State to track which compliance attribute filters are active (toggle buttons)
+  const [complianceFilters, setComplianceFilters] = useState({
+    updateWbsCode: false,
+    reviewScheduleStatus: false,
+    reviewFinancialStatus: false,
+    reviewOverallStatus: false,
+    addActiveIssue: false,
+    updateProjectStatus: false,
+    updateOpenMilestones: false,
+    updateProjectStage: false,
+    updateProjectManager: false,
+    updateMilestones: false,
+    updateFinancials: false,
+    updateProjectStatusReport: false
+  });
+
   // useEffect hook runs once when component mounts to load CSV data
   useEffect(() => {
     // Fetch the CSV file from the public folder
@@ -77,7 +93,7 @@ function App() {
     // Start with the complete dataset
     let filtered = data;
 
-    // Apply each filter if it has a value selected
+    // Apply main dropdown filters if they have a value selected
     // Each filter narrows down the results further
     if (filters.account) {
       filtered = filtered.filter(row => row.Account === filters.account);
@@ -95,9 +111,91 @@ function App() {
       filtered = filtered.filter(row => row['Project Manager'] === filters.projectManager);
     }
 
+    // Apply compliance attribute filters - only show records that match ALL active compliance filters
+    const activeComplianceFilters = Object.keys(complianceFilters).filter(key => complianceFilters[key]);
+    
+    if (activeComplianceFilters.length > 0) {
+      filtered = filtered.filter(row => {
+        // Check if row matches ALL active compliance filters
+        return activeComplianceFilters.every(filterKey => {
+          switch(filterKey) {
+            case 'updateWbsCode':
+              // Records with empty Project WBS field
+              return !row['Project WBS'] || row['Project WBS'].trim() === '';
+            
+            case 'reviewScheduleStatus':
+              // Reported Schedule RAG is healthier than calculated
+              const schedRagOrder = { 'Green': 3, 'Amber': 2, 'Red': 1 };
+              const calcSched = schedRagOrder[row['Calculated Schedule RAG']] || 0;
+              const repSched = schedRagOrder[row['Reported Schedule RAG']] || 0;
+              return repSched > calcSched;
+            
+            case 'reviewFinancialStatus':
+              // Reported Financial RAG is healthier than calculated
+              const finRagOrder = { 'Green': 3, 'Amber': 2, 'Red': 1 };
+              const calcFin = finRagOrder[row['Calculated Financial RAG']] || 0;
+              const repFin = finRagOrder[row['Reported Financial RAG']] || 0;
+              return repFin > calcFin;
+            
+            case 'reviewOverallStatus':
+              // Reported Overall RAG is healthier than calculated
+              const overallRagOrder = { 'Green': 3, 'Amber': 2, 'Red': 1 };
+              const calcOverall = overallRagOrder[row['Calculated Overall RAG']] || 0;
+              const repOverall = overallRagOrder[row['Reported Overall RAG']] || 0;
+              return repOverall > calcOverall;
+            
+            case 'addActiveIssue':
+              // Active Issue field is empty AND Reported Overall is Red
+              return (!row['Active Issue'] || row['Active Issue'].trim() === '') && 
+                     row['Reported Overall RAG'] === 'Red';
+            
+            case 'updateProjectStatus':
+              // Reported Overall is non-green AND Go-to-Green Date is past or empty
+              const isNonGreen = row['Reported Overall RAG'] !== 'Green';
+              const gtgEmpty = !row['Project GTG Date'] || row['Project GTG Date'].trim() === '';
+              return isNonGreen && gtgEmpty;
+            
+            case 'updateOpenMilestones':
+              // Open Milestone Date field is empty
+              return !row['Open Milestone Date'] || row['Open Milestone Date'].trim() === '';
+            
+            case 'updateProjectStage':
+              // Stage is "In Planning" (simplified - not checking 30 days)
+              return row['Stage'] === 'In Planning';
+            
+            case 'updateProjectManager':
+              // Project Manager field is empty
+              return !row['Project Manager'] || row['Project Manager'].trim() === '';
+            
+            case 'updateMilestones':
+              // Milestone Criteria Met is empty or FALSE
+              return !row['Milestone Criteria Met'] || 
+                     row['Milestone Criteria Met'].trim() === '' || 
+                     row['Milestone Criteria Met'] === 'FALSE';
+            
+            case 'updateFinancials':
+              // Any key financial field is missing
+              const financialFields = ['Billing Type', 'Opportunity ID', 'Client ID', 
+                                      'Planned Project Hours Baseline', 'Planned Hours', 
+                                      'Schedule Remaining Hours', 'Project Currency', 
+                                      'Planned Revenue Baseline', 'Billable'];
+              return financialFields.some(field => !row[field] || row[field].toString().trim() === '');
+            
+            case 'updateProjectStatusReport':
+              // Project Status Report Submission Date is empty
+              return !row['Project Status Report Submission Date'] || 
+                     row['Project Status Report Submission Date'].trim() === '';
+            
+            default:
+              return true;
+          }
+        });
+      });
+    }
+
     // Update the filtered data state with the results
     setFilteredData(filtered);
-  }, [filters, data]); // Re-run when filters or data changes
+  }, [filters, complianceFilters, data]); // Re-run when filters, compliance filters, or data changes
 
   // Function to update a specific filter when user selects a value
   const handleFilterChange = (filterName, value) => {
@@ -107,7 +205,7 @@ function App() {
     }));
   };
 
-  // Function to reset all filters back to empty (show all data)
+  // Function to reset all main filters back to empty (show all data)
   const clearFilters = () => {
     setFilters({
       account: '',
@@ -115,6 +213,32 @@ function App() {
       serviceLevel: '',
       practice: '',
       projectManager: ''
+    });
+  };
+
+  // Function to toggle a compliance attribute filter on/off
+  const toggleComplianceFilter = (filterKey) => {
+    setComplianceFilters(prev => ({
+      ...prev,
+      [filterKey]: !prev[filterKey] // Toggle the boolean value
+    }));
+  };
+
+  // Function to clear all compliance filters
+  const clearComplianceFilters = () => {
+    setComplianceFilters({
+      updateWbsCode: false,
+      reviewScheduleStatus: false,
+      reviewFinancialStatus: false,
+      reviewOverallStatus: false,
+      addActiveIssue: false,
+      updateProjectStatus: false,
+      updateOpenMilestones: false,
+      updateProjectStage: false,
+      updateProjectManager: false,
+      updateMilestones: false,
+      updateFinancials: false,
+      updateProjectStatusReport: false
     });
   };
 
@@ -209,6 +333,91 @@ function App() {
         </div>
         {/* Display count of filtered vs total records */}
         <p className="results-count">Showing {filteredData.length} of {data.length} projects</p>
+      </div>
+
+      {/* Compliance Attribute Filters - Toggle buttons */}
+      <div className="compliance-filters-container">
+        <div className="compliance-filters-header">
+          <h3>Compliance Attribute Filters</h3>
+          <button onClick={clearComplianceFilters} className="clear-compliance-button">
+            Clear All
+          </button>
+        </div>
+        <div className="compliance-filters-grid">
+          {/* Toggle button for each compliance attribute */}
+          <button 
+            className={`compliance-toggle ${complianceFilters.updateWbsCode ? 'active' : ''}`}
+            onClick={() => toggleComplianceFilter('updateWbsCode')}
+          >
+            Update WBS Code
+          </button>
+          <button 
+            className={`compliance-toggle ${complianceFilters.reviewScheduleStatus ? 'active' : ''}`}
+            onClick={() => toggleComplianceFilter('reviewScheduleStatus')}
+          >
+            Review Schedule Status
+          </button>
+          <button 
+            className={`compliance-toggle ${complianceFilters.reviewFinancialStatus ? 'active' : ''}`}
+            onClick={() => toggleComplianceFilter('reviewFinancialStatus')}
+          >
+            Review Financial Status
+          </button>
+          <button 
+            className={`compliance-toggle ${complianceFilters.reviewOverallStatus ? 'active' : ''}`}
+            onClick={() => toggleComplianceFilter('reviewOverallStatus')}
+          >
+            Review Overall Status
+          </button>
+          <button 
+            className={`compliance-toggle ${complianceFilters.addActiveIssue ? 'active' : ''}`}
+            onClick={() => toggleComplianceFilter('addActiveIssue')}
+          >
+            Add Active Issue
+          </button>
+          <button 
+            className={`compliance-toggle ${complianceFilters.updateProjectStatus ? 'active' : ''}`}
+            onClick={() => toggleComplianceFilter('updateProjectStatus')}
+          >
+            Update Project Status
+          </button>
+          <button 
+            className={`compliance-toggle ${complianceFilters.updateOpenMilestones ? 'active' : ''}`}
+            onClick={() => toggleComplianceFilter('updateOpenMilestones')}
+          >
+            Update Open Milestones
+          </button>
+          <button 
+            className={`compliance-toggle ${complianceFilters.updateProjectStage ? 'active' : ''}`}
+            onClick={() => toggleComplianceFilter('updateProjectStage')}
+          >
+            Update Project Stage
+          </button>
+          <button 
+            className={`compliance-toggle ${complianceFilters.updateProjectManager ? 'active' : ''}`}
+            onClick={() => toggleComplianceFilter('updateProjectManager')}
+          >
+            Update Project Manager
+          </button>
+          <button 
+            className={`compliance-toggle ${complianceFilters.updateMilestones ? 'active' : ''}`}
+            onClick={() => toggleComplianceFilter('updateMilestones')}
+          >
+            Update Milestones
+          </button>
+          <button 
+            className={`compliance-toggle ${complianceFilters.updateFinancials ? 'active' : ''}`}
+            onClick={() => toggleComplianceFilter('updateFinancials')}
+          >
+            Update Financials
+          </button>
+          <button 
+            className={`compliance-toggle ${complianceFilters.updateProjectStatusReport ? 'active' : ''}`}
+            onClick={() => toggleComplianceFilter('updateProjectStatusReport')}
+          >
+            Update Status Report
+          </button>
+        </div>
       </div>
 
       {/* Table container with horizontal and vertical scrolling */}
