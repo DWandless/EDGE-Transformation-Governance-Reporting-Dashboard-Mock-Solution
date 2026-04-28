@@ -344,76 +344,88 @@ function App() {
           </button>
         </div>
         <div className="compliance-filters-grid">
-          {/* Toggle button for each compliance attribute */}
+          {/* Toggle button for each compliance attribute with hover tooltip */}
           <button 
             className={`compliance-toggle ${complianceFilters.updateWbsCode ? 'active' : ''}`}
             onClick={() => toggleComplianceFilter('updateWbsCode')}
+            data-tooltip="Shows projects where the Project WBS field is empty"
           >
             Update WBS Code
           </button>
           <button 
             className={`compliance-toggle ${complianceFilters.reviewScheduleStatus ? 'active' : ''}`}
             onClick={() => toggleComplianceFilter('reviewScheduleStatus')}
+            data-tooltip="Shows projects where the Reported Schedule RAG is healthier than the Calculated Schedule RAG"
           >
             Review Schedule Status
           </button>
           <button 
             className={`compliance-toggle ${complianceFilters.reviewFinancialStatus ? 'active' : ''}`}
             onClick={() => toggleComplianceFilter('reviewFinancialStatus')}
+            data-tooltip="Shows projects where the Reported Financial RAG is healthier than the Calculated Financial RAG"
           >
             Review Financial Status
           </button>
           <button 
             className={`compliance-toggle ${complianceFilters.reviewOverallStatus ? 'active' : ''}`}
             onClick={() => toggleComplianceFilter('reviewOverallStatus')}
+            data-tooltip="Shows projects where the Reported Overall RAG is healthier than the Calculated Overall RAG"
           >
             Review Overall Status
           </button>
           <button 
             className={`compliance-toggle ${complianceFilters.addActiveIssue ? 'active' : ''}`}
             onClick={() => toggleComplianceFilter('addActiveIssue')}
+            data-tooltip="Shows projects where the Active Issue field is empty AND the Reported Overall RAG is Red"
           >
             Add Active Issue
           </button>
           <button 
             className={`compliance-toggle ${complianceFilters.updateProjectStatus ? 'active' : ''}`}
             onClick={() => toggleComplianceFilter('updateProjectStatus')}
+            data-tooltip="Shows projects where the Reported Overall RAG is non-green AND the Go-to-Green Date is empty"
           >
             Update Project Status
           </button>
           <button 
             className={`compliance-toggle ${complianceFilters.updateOpenMilestones ? 'active' : ''}`}
             onClick={() => toggleComplianceFilter('updateOpenMilestones')}
+            data-tooltip="Shows projects where the Open Milestone Date field is empty"
           >
             Update Open Milestones
           </button>
           <button 
             className={`compliance-toggle ${complianceFilters.updateProjectStage ? 'active' : ''}`}
             onClick={() => toggleComplianceFilter('updateProjectStage')}
+            data-tooltip="Shows projects where the Stage is 'In Planning'"
           >
             Update Project Stage
           </button>
           <button 
             className={`compliance-toggle ${complianceFilters.updateProjectManager ? 'active' : ''}`}
             onClick={() => toggleComplianceFilter('updateProjectManager')}
+            data-tooltip="Shows projects where the Project Manager field is empty"
           >
             Update Project Manager
           </button>
           <button 
             className={`compliance-toggle ${complianceFilters.updateMilestones ? 'active' : ''}`}
             onClick={() => toggleComplianceFilter('updateMilestones')}
+            data-tooltip="Shows projects where the Milestone Criteria Met field is empty or FALSE"
           >
             Update Milestones
           </button>
           <button 
             className={`compliance-toggle ${complianceFilters.updateFinancials ? 'active' : ''}`}
             onClick={() => toggleComplianceFilter('updateFinancials')}
+            data-tooltip="Shows projects where any key financial field is missing (Billing Type, Opportunity ID, Client ID, Planned Hours, etc.)"
           >
             Update Financials
           </button>
           <button 
             className={`compliance-toggle ${complianceFilters.updateProjectStatusReport ? 'active' : ''}`}
             onClick={() => toggleComplianceFilter('updateProjectStatusReport')}
+            data-tooltip="Shows projects where the Project Status Report Submission Date is empty"
           >
             Update Status Report
           </button>

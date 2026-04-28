@@ -158,6 +158,53 @@
   font-weight: 500;
   transition: all 0.2s ease;
   text-align: center;
+  position: relative; /* Required for tooltip positioning */
+}
+
+/* Custom tooltip styling */
+.compliance-toggle::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-8px);
+  background-color: #0078d4;
+  color: white;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 400;
+  white-space: normal;
+  width: 250px;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 1000;
+  line-height: 1.4;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Tooltip arrow */
+.compliance-toggle::after {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-2px);
+  border: 6px solid transparent;
+  border-top-color: #ffffff;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 1000;
+}
+
+/* Show tooltip on hover */
+.compliance-toggle:hover::before,
+.compliance-toggle:hover::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-4px);
 }
 
 /* Hover effect for inactive toggle buttons */
