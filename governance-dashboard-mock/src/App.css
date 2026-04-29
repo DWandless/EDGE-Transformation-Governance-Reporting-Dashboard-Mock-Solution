@@ -14,32 +14,32 @@
 
 .App-header h1 {
   margin: 0;
-  font-size: 1.8rem;
+  font-size: 1rem;
   font-weight: 600;
 }
 
 /* Filter controls container - white card with shadow */
 .filters-container {
   background-color: white;
-  margin: 2rem;
-  padding: 1.5rem;
+  margin: 0.5rem 2rem;
+  padding: 0.5rem;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .filters-container h2 {
   margin-top: 0;
-  margin-bottom: 1rem;
+  margin-bottom: 0.25rem;
   color: #333;
-  font-size: 1.3rem;
+  font-size: 0.9rem;
 }
 
 /* Grid layout for filter dropdowns - responsive, auto-fits columns */
 .filters-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Auto-fit columns with min 200px width */
-  gap: 1rem;
-  margin-bottom: 1rem;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
 }
 
 /* Individual filter item - stacks label above dropdown */
@@ -50,17 +50,17 @@
 
 .filter-item label {
   font-weight: 600;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
   color: #555;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 }
 
 /* Dropdown select styling */
 .filter-item select {
-  padding: 0.5rem;
+  padding: 0.4rem;
   border: 1px solid #ccc;
   border-radius: 4px;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   background-color: white;
   cursor: pointer;
 }
@@ -74,13 +74,13 @@
 
 /* Clear filters button styling */
 .clear-button {
-  padding: 0.5rem 1rem;
+  padding: 0.4rem 0.8rem;
   background-color: #0078d4;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   font-weight: 600;
   align-self: flex-end; /* Aligns button to bottom of grid cell */
   margin-top: auto;
@@ -94,18 +94,19 @@
 /* Results count text - shows "X of Y projects" */
 .results-count {
   color: #666;
-  font-size: 0.95rem;
+  font-size: 0.75rem;
   margin: 0;
-  padding-top: 0.5rem;
+  padding-top: 0.25rem;
   border-top: 1px solid #eee;
 }
 
 /* Compliance Attribute Filters Section */
 .compliance-filters-container {
   background-color: white;
-  margin: 0 2rem 2rem 2rem;
-  padding: 1.5rem;
+  margin: 0 2rem 1rem 2rem;
+  padding: 1rem;
   border-radius: 8px;
+  max-width: 40%;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
@@ -114,13 +115,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 }
 
 .compliance-filters-header h3 {
   margin: 0;
   color: #333;
-  font-size: 1.2rem;
+  font-size: 1rem;
 }
 
 /* Clear all compliance filters button */
@@ -235,7 +236,7 @@
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   overflow-x: auto; /* Horizontal scroll for wide table (34 columns) */
   max-height: 350px; /* Limits height to show ~4 rows */
-  max-width: 93%; /* Limits width to 93% of parent */
+  max-width: 96.5%; /* Limits width to 93% of parent */
   overflow-y: auto; /* Vertical scroll for additional rows */
 }
 
@@ -243,7 +244,7 @@
 .data-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.9rem;
+  font-size: 0.75rem;
 }
 
 /* Table header - sticky positioning keeps it visible when scrolling vertically */
@@ -256,17 +257,18 @@
 
 /* Table header cells - bold text with no wrapping */
 .data-table th {
-  padding: 1rem 0.75rem;
+  padding: 0.6rem 0.5rem;
   text-align: left;
   font-weight: 600;
   color: #333;
   border-bottom: 2px solid #dee2e6;
   white-space: nowrap; /* Prevents column headers from wrapping */
+  font-size: 0.75rem;
 }
 
 /* Table data cells */
 .data-table td {
-  padding: 0.75rem;
+  padding: 0.5rem;
   border-bottom: 1px solid #dee2e6;
   color: #555;
 }
