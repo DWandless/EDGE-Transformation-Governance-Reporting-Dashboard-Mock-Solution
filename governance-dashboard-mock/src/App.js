@@ -6,9 +6,29 @@
  * and filtering capabilities by Account, Market, Service Level, Practice, and Project Manager.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Papa from 'papaparse'; // Library for parsing CSV files
+import { Bar } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+} from 'chart.js';
 import './App.css';
+
+// Register Chart.js components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 function App() {
   // State to store the complete dataset from CSV
@@ -242,6 +262,110 @@ function App() {
     });
   };
 
+  // Helper function to check if a row matches a specific compliance filter
+  const matchesComplianceFilter = (row, filterKey) => {
+    switch(filterKey) {
+      case 'updateWbsCode':
+        return !row['Project WBS'] || row['Project WBS'].trim() === '';
+      case 'reviewScheduleStatus':
+        const schedRagOrder = { 'Green': 3, 'Amber': 2, 'Red': 1 };
+        return (schedRagOrder[row['Reported Schedule RAG']] || 0) > (schedRagOrder[row['Calculated Schedule RAG']] || 0);
+      case 'reviewFinancialStatus':
+        const finRagOrder = { 'Green': 3, 'Amber': 2, 'Red': 1 };
+        return (finRagOrder[row['Reported Financial RAG']] || 0) > (finRagOrder[row['Calculated Financial RAG']] || 0);
+      case 'reviewOverallStatus':
+        const overallRagOrder = { 'Green': 3, 'Amber': 2, 'Red': 1 };
+        return (overallRagOrder[row['Reported Overall RAG']] || 0) > (overallRagOrder[row['Calculated Overall RAG']] || 0);
+      case 'addActiveIssue':
+        return (!row['Active Issue'] || row['Active Issue'].trim() === '') && row['Reported Overall RAG'] === 'Red';
+      case 'updateProjectStatus':
+        return row['Reported Overall RAG'] !== 'Green' && (!row['Project GTG Date'] || row['Project GTG Date'].trim() === '');
+      case 'updateOpenMilestones':
+        return !row['Open Milestone Date'] || row['Open Milestone Date'].trim() === '';
+      case 'updateProjectStage':
+        return row['Stage'] === 'In Planning';
+      case 'updateProjectManager':
+        return !row['Project Manager'] || row['Project Manager'].trim() === '';
+      case 'updateMilestones':
+        return !row['Milestone Criteria Met'] || row['Milestone Criteria Met'].trim() === '' || row['Milestone Criteria Met'] === 'FALSE';
+      case 'updateFinancials':
+        const financialFields = ['Billing Type', 'Opportunity ID', 'Client ID', 'Planned Project Hours Baseline', 'Planned Hours', 'Schedule Remaining Hours', 'Project Currency', 'Planned Revenue Baseline', 'Billable'];
+        return financialFields.some(field => !row[field] || row[field].toString().trim() === '');
+      case 'updateProjectStatusReport':
+        return !row['Project Status Report Submission Date'] || row['Project Status Report Submission Date'].trim() === '';
+      default:
+        return false;
+    }
+  };
+
+  // Calculate chart data based on active compliance filters and main filters
+  const chartData = useMemo(() => {
+    // Get the first active compliance filter for the chart
+    const activeFilter = Object.keys(complianceFilters).find(key => complianceFilters[key]);
+
+    // Apply main filters first
+    let baseFilteredData = data;
+    if (filters.account) baseFilteredData = baseFilteredData.filter(row => row.Account === filters.account);
+    if (filters.market) baseFilteredData = baseFilteredData.filter(row => row.Market === filters.market);
+    if (filters.serviceLevel) baseFilteredData = baseFilteredData.filter(row => row['Service Level'] === filters.serviceLevel);
+    if (filters.practice) baseFilteredData = baseFilteredData.filter(row => row.Practice === filters.practice);
+    if (filters.projectManager) baseFilteredData = baseFilteredData.filter(row => row['Project Manager'] === filters.projectManager);
+
+    // Get unique accounts
+    const accounts = [...new Set(baseFilteredData.map(row => row.Account).filter(Boolean))].sort();
+    
+    // If no compliance filter is active, show total projects per account
+    if (!activeFilter) {
+      const counts = accounts.map(account => {
+        return baseFilteredData.filter(row => row.Account === account).length;
+      });
+
+      return {
+        labels: accounts,
+        datasets: [{
+          label: 'Total Projects',
+          data: counts,
+          backgroundColor: '#0078d4',
+          borderColor: '#005a9e',
+          borderWidth: 1
+        }]
+      };
+    }
+
+    // Count projects per account that match the active compliance filter
+    const counts = accounts.map(account => {
+      const accountProjects = baseFilteredData.filter(row => row.Account === account);
+      return accountProjects.filter(row => matchesComplianceFilter(row, activeFilter)).length;
+    });
+
+    // Filter labels
+    const filterLabels = {
+      updateWbsCode: 'Missing WBS Code',
+      reviewScheduleStatus: 'Schedule RAG Mismatch',
+      reviewFinancialStatus: 'Financial RAG Mismatch',
+      reviewOverallStatus: 'Overall RAG Mismatch',
+      addActiveIssue: 'Missing Active Issue',
+      updateProjectStatus: 'Missing GTG Date',
+      updateOpenMilestones: 'Missing Milestone Date',
+      updateProjectStage: 'In Planning Stage',
+      updateProjectManager: 'Missing Project Manager',
+      updateMilestones: 'Milestone Criteria Not Met',
+      updateFinancials: 'Missing Financial Data',
+      updateProjectStatusReport: 'Missing Status Report'
+    };
+
+    return {
+      labels: accounts,
+      datasets: [{
+        label: filterLabels[activeFilter],
+        data: counts,
+        backgroundColor: '#0078d4',
+        borderColor: '#005a9e',
+        borderWidth: 1
+      }]
+    };
+  }, [data, filters, complianceFilters]);
+
   // Render the dashboard UI
   return (
     <div className="App">
@@ -335,8 +459,41 @@ function App() {
         <p className="results-count">Showing {filteredData.length} of {data.length} projects</p>
       </div>
 
-      {/* Compliance Attribute Filters - Toggle buttons */}
-      <div className="compliance-filters-container">
+      {/* Compliance Filters and Chart Section */}
+      <div className="compliance-section">
+        {/* Chart Container */}
+        <div className="chart-container">
+          <h3>Account Breakdown</h3>
+          {chartData && (
+            <Bar 
+              data={chartData}
+              options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                  legend: {
+                    display: true,
+                    position: 'top',
+                  },
+                  title: {
+                    display: false
+                  }
+                },
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                    ticks: {
+                      stepSize: 1
+                    }
+                  }
+                }
+              }}
+            />
+          )}
+        </div>
+
+        {/* Compliance Attribute Filters - Toggle buttons */}
+        <div className="compliance-filters-container">
         <div className="compliance-filters-header">
           <h3>Compliance Attribute Filters</h3>
           <button onClick={clearComplianceFilters} className="clear-compliance-button">
@@ -429,6 +586,7 @@ function App() {
           >
             Update Status Report
           </button>
+        </div>
         </div>
       </div>
 

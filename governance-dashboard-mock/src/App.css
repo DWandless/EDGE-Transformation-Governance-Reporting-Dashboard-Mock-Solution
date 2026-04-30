@@ -75,7 +75,7 @@
 /* Clear filters button styling */
 .clear-button {
   padding: 0.4rem 0.8rem;
-  background-color: #0078d4;
+  background-color: #dc3545;
   color: white;
   border: none;
   border-radius: 4px;
@@ -100,13 +100,19 @@
   border-top: 1px solid #eee;
 }
 
+/* Compliance Section - contains filters and chart side by side */
+.compliance-section {
+  display: flex;
+  gap: 1rem;
+  margin: 0 2rem 1rem 2rem;
+}
+
 /* Compliance Attribute Filters Section */
 .compliance-filters-container {
   background-color: white;
-  margin: 0 2rem 1rem 2rem;
   padding: 1rem;
   border-radius: 8px;
-  max-width: 40%;
+  flex: 0 0 40%;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
@@ -222,6 +228,27 @@
   font-weight: 600;
 }
 
+/* Chart Container */
+.chart-container {
+  background-color: white;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-container h3 {
+  margin: 0 0 0.75rem 0;
+  color: #333;
+  font-size: 1rem;
+}
+
+.chart-container canvas {
+  max-height: 300px;
+}
+
 /* Hover effect for active toggle buttons */
 .compliance-toggle.active:hover {
   background-color: #005a9e;
@@ -235,7 +262,7 @@
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   overflow-x: auto; /* Horizontal scroll for wide table (34 columns) */
-  max-height: 350px; /* Limits height to show ~4 rows */
+  max-height: 250px; /* Limits height to show ~4 rows */
   max-width: 96.5%; /* Limits width to 93% of parent */
   overflow-y: auto; /* Vertical scroll for additional rows */
 }
