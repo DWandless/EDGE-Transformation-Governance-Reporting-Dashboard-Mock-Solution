@@ -18,6 +18,7 @@ import {
   Tooltip,
   Legend
 } from 'chart.js';
+import ComplianceAssistant from './ComplianceAssistant';
 import './App.css';
 
 // Register Chart.js components
@@ -692,6 +693,16 @@ function App() {
           </tbody>
         </table>
       </div>
+
+      {/* Compliance Assistant Chat */}
+      <ComplianceAssistant 
+        data={data}
+        filteredData={filteredData}
+        filters={filters}
+        complianceFilters={complianceFilters}
+        onFilterChange={handleFilterChange}
+        onComplianceFilterToggle={toggleComplianceFilter}
+      />
     </div>
   );
 }
