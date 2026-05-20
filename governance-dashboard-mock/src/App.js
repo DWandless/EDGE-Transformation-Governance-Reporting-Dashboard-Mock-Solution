@@ -326,8 +326,8 @@ function App() {
         datasets: [{
           label: 'Total Projects',
           data: counts,
-          backgroundColor: 'rgb(255, 182, 122)',
-          borderColor: 'rgb(255, 182, 122)',
+          backgroundColor: '#649AF1',
+          borderColor: '#649AF1',
           borderWidth: 1
         }]
       };
@@ -360,8 +360,8 @@ function App() {
       datasets: [{
         label: filterLabels[activeFilter],
         data: counts,
-        backgroundColor: 'rgb(255, 182, 122)',
-        borderColor: 'rgb(255, 182, 122)',
+        backgroundColor: '#649AF1',
+        borderColor: '#649AF1',
         borderWidth: 1
       }]
     };
