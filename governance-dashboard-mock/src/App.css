@@ -4,17 +4,29 @@
   background-color: #f5f5f5;
 }
 
-/* Header section - blue background with white text */
+/* Header section - gradient background with white text */
 .App-header {
-  background-color: #0078d4;
-  color: white;
+  background: linear-gradient(90deg, rgba(99, 153, 240, 0.7) 0%, rgba(167, 193, 250, 0.7) 50%, rgba(255, 182, 122, 0.7) 100%);
+  color: #333;
   padding: 1.5rem 2rem;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
 }
 
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo {
+  height: 50px;
+  width: auto;
+  object-fit: contain;
+}
+
 .App-header h1 {
   margin: 0;
-  font-size: 1rem;
+  font-size: 1.5rem;
   font-weight: 600;
 }
 
@@ -65,17 +77,17 @@
   cursor: pointer;
 }
 
-/* Blue focus ring when dropdown is selected */
+/* Focus ring when dropdown is selected */
 .filter-item select:focus {
   outline: none;
-  border-color: #0078d4;
-  box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.2);
+  border-color: #FFB67A;
+  box-shadow: 0 0 0 2px rgba(255, 182, 122, 0.4);
 }
 
 /* Clear filters button styling */
 .clear-button {
   padding: 0.4rem 0.8rem;
-  background-color: #dc3545;
+  background-color: #649AF1;
   color: white;
   border: none;
   border-radius: 4px;
@@ -86,9 +98,9 @@
   margin-top: auto;
 }
 
-/* Darker blue on hover */
+/* Darker on hover */
 .clear-button:hover {
-  background-color: #005a9e;
+  opacity: 0.8;
 }
 
 /* Results count text - shows "X of Y projects" */
@@ -133,17 +145,17 @@
 /* Clear all compliance filters button */
 .clear-compliance-button {
   padding: 0.4rem 0.8rem;
-  background-color: #dc3545;
+  background-color: #649AF1;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: 0.75rem;
+  transition: opacity 0.2s;
 }
 
 .clear-compliance-button:hover {
-  background-color: #c82333;
+  opacity: 0.8;
 }
 
 /* Grid layout for compliance toggle buttons */
@@ -175,7 +187,7 @@
   bottom: 100%;
   left: 50%;
   transform: translateX(-50%) translateY(-8px);
-  background-color: #0078d4;
+  background-color: #649AF1;
   color: white;
   padding: 0.5rem 0.75rem;
   border-radius: 6px;
@@ -222,9 +234,9 @@
 
 /* Active state for compliance toggle buttons */
 .compliance-toggle.active {
-  background-color: #0078d4;
+  background-color: #649AF1;
   color: white;
-  border-color: #0078d4;
+  border-color: #649AF1;
   font-weight: 600;
 }
 
@@ -251,8 +263,7 @@
 
 /* Hover effect for active toggle buttons */
 .compliance-toggle.active:hover {
-  background-color: #005a9e;
-  border-color: #005a9e;
+  opacity: 0.8;
 }
 
 /* Table container - enables both horizontal and vertical scrolling */

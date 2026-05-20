@@ -326,8 +326,8 @@ function App() {
         datasets: [{
           label: 'Total Projects',
           data: counts,
-          backgroundColor: '#0078d4',
-          borderColor: '#005a9e',
+          backgroundColor: 'rgb(255, 182, 122)',
+          borderColor: 'rgb(255, 182, 122)',
           borderWidth: 1
         }]
       };
@@ -360,8 +360,8 @@ function App() {
       datasets: [{
         label: filterLabels[activeFilter],
         data: counts,
-        backgroundColor: '#0078d4',
-        borderColor: '#005a9e',
+        backgroundColor: 'rgb(255, 182, 122)',
+        borderColor: 'rgb(255, 182, 122)',
         borderWidth: 1
       }]
     };
@@ -372,7 +372,10 @@ function App() {
     <div className="App">
       {/* Header section with dashboard title */}
       <header className="App-header">
-        <h1>EDGE Governance & Reporting Dashboard</h1>
+        <div className="header-content">
+          <img src="/logo.png" alt="Logo" className="logo" />
+          <h1>EDGE Governance & Reporting Dashboard</h1>
+        </div>
       </header>
 
       {/* Filter controls section */}

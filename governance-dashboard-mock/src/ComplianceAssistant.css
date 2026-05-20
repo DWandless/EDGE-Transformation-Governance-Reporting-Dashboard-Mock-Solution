@@ -6,8 +6,8 @@
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background-color: #0078d4;
-  color: white;
+  background: linear-gradient(90deg, rgba(99, 153, 240, 0.7) 0%, rgba(167, 193, 250, 0.7) 50%, rgba(255, 182, 122, 0.7) 100%);
+  color: #333;
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
@@ -17,7 +17,7 @@
 }
 
 .chat-toggle-button:hover {
-  background-color: #005a9e;
+  opacity: 0.8;
   transform: scale(1.1);
 }
 
@@ -39,8 +39,8 @@
 
 /* Chat header */
 .chat-header {
-  background-color: #0078d4;
-  color: white;
+  background: linear-gradient(90deg, rgba(99, 153, 240, 0.7) 0%, rgba(167, 193, 250, 0.7) 50%, rgba(255, 182, 122, 0.7) 100%);
+  color: #333;
   padding: 1rem;
   display: flex;
   justify-content: space-between;
@@ -98,7 +98,7 @@
 .api-key-save-button {
   width: 100%;
   padding: 0.5rem;
-  background-color: #0078d4;
+  background-color: #649AF1;
   color: white;
   border: none;
   border-radius: 4px;
@@ -108,7 +108,7 @@
 }
 
 .api-key-save-button:hover {
-  background-color: #005a9e;
+  opacity: 0.8;
 }
 
 /* Messages container */
@@ -145,8 +145,8 @@
 }
 
 .chat-message.user .message-content {
-  background-color: #0078d4;
-  color: white;
+  background: linear-gradient(90deg, rgba(99, 153, 240, 0.7) 0%, rgba(167, 193, 250, 0.7) 50%, rgba(255, 182, 122, 0.7) 100%);
+  color: #333;
   border-bottom-right-radius: 4px;
 }
 
@@ -209,8 +209,8 @@
 
 .chat-input:focus {
   outline: none;
-  border-color: #0078d4;
-  box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.2);
+  border-color: #FFB67A;
+  box-shadow: 0 0 0 2px rgba(255, 182, 122, 0.4);
 }
 
 .chat-input:disabled {
@@ -220,18 +220,18 @@
 
 .chat-send-button {
   padding: 0.5rem 1rem;
-  background-color: #0078d4;
+  background-color: #649AF1;
   color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   font-size: 0.9rem;
   font-weight: 600;
-  transition: background-color 0.2s;
+  transition: opacity 0.2s;
 }
 
 .chat-send-button:hover:not(:disabled) {
-  background-color: #005a9e;
+  opacity: 0.8;
 }
 
 .chat-send-button:disabled {
@@ -241,22 +241,22 @@
 
 /* Links in chat messages */
 .chat-link {
-  color: #0078d4;
+  color: #FF8C00;
   text-decoration: underline;
   cursor: pointer;
   font-weight: 600;
 }
 
 .chat-link:hover {
-  color: #005a9e;
+  color: #E07B00;
 }
 
 .chat-message.assistant .chat-link {
-  color: #0078d4;
+  color: #FF8C00;
 }
 
 .chat-message.user .chat-link {
-  color: #ffffff;
+  color: #333;
   text-decoration: underline;
 }
 
