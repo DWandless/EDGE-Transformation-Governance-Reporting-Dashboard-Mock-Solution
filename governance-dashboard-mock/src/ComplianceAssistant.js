@@ -49,7 +49,12 @@ What would you like to know?`
   // Load policy links CSV on component mount
   useEffect(() => {
     fetch('/policy-links.csv')
-      .then(response => response.text())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.text();
+      })
       .then(csvText => {
         Papa.parse(csvText, {
           header: true,
@@ -63,11 +68,15 @@ What would you like to know?`
                 linksMap[attribute] = link;
               }
             });
+            console.log('Loaded policy links:', linksMap);
             setPolicyLinks(linksMap);
           }
         });
       })
-      .catch(error => console.error('Error loading policy links:', error));
+      .catch(error => {
+        console.error('Error loading policy links:', error);
+        console.error('Make sure policy-links.csv is in the public folder');
+      });
   }, []);
 
   // Get available filter options from data
@@ -99,6 +108,8 @@ What would you like to know?`
           `- ${key}: ${link}`
         ).join('\n')}`
       : '';
+    
+    console.log('Policy links in context:', Object.keys(policyLinks).length, 'links');
 
     return `
 Current Dashboard State:
@@ -212,7 +223,7 @@ Always format links as clickable markdown links like [Link Text](URL).
           messages: [
             {
               role: 'system',
-              content: buildContext() + '\n\nProvide helpful, concise answers about the governance data. Be specific and reference the data when possible. When users ask to filter or show specific data, use the available functions to apply filters.'
+              content: buildContext() + '\n\nProvide helpful, concise answers about the governance data. Be specific and reference the data when possible. When users ask to filter or show specific data, use the available functions to apply filters.\n\nIMPORTANT: When a user requests multiple filter conditions (e.g., "show me Account 1 projects with missing WBS codes"), you MUST call BOTH the apply_filter function AND the toggle_compliance_filter function in the same response. Always apply all requested filters together, not just one.\n\nCRITICAL: When users ask about compliance issues, missing data, or how to fix specific compliance problems (e.g., "how do I fix missing WBS codes"), you MUST provide the FULL URL from the "Available Policy & Guidance Links" section. Do NOT just list the name - include the complete URL (e.g., "https://dxcportal.sharepoint.com/sites/..."). The policy links listed in that section are REAL links, not placeholders. If a specific compliance attribute has a link in that section, provide that exact full URL. If no link is available for that attribute, say "No policy link is available for this item."'
             },
             ...messages.slice(-5), // Include last 5 messages for context
             userMessage
@@ -237,27 +248,33 @@ Always format links as clickable markdown links like [Link Text](URL).
       const choice = data.choices[0];
       const message = choice.message;
 
-      // Check if the assistant wants to call a function
+      // Check if the assistant wants to call functions
       if (message.tool_calls && message.tool_calls.length > 0) {
-        const toolCall = message.tool_calls[0];
-        const functionName = toolCall.function.name;
-        const functionArgs = JSON.parse(toolCall.function.arguments);
+        const functionResults = [];
+        
+        // Process all tool calls in the response
+        for (const toolCall of message.tool_calls) {
+          const functionName = toolCall.function.name;
+          const functionArgs = JSON.parse(toolCall.function.arguments);
 
-        let functionResult = '';
+          let functionResult = '';
 
-        // Execute the requested function
-        if (functionName === 'apply_main_filter') {
-          onFilterChange(functionArgs.filterType, functionArgs.value);
-          functionResult = `Applied ${functionArgs.filterType} filter: ${functionArgs.value || 'cleared'}`;
-        } else if (functionName === 'toggle_compliance_filter') {
-          onComplianceFilterToggle(functionArgs.filterKey);
-          functionResult = `${functionArgs.enable ? 'Enabled' : 'Disabled'} compliance filter: ${functionArgs.filterKey}`;
+          // Execute the requested function
+          if (functionName === 'apply_main_filter') {
+            onFilterChange(functionArgs.filterType, functionArgs.value);
+            functionResult = `Applied ${functionArgs.filterType} filter: ${functionArgs.value || 'cleared'}`;
+          } else if (functionName === 'toggle_compliance_filter') {
+            onComplianceFilterToggle(functionArgs.filterKey);
+            functionResult = `${functionArgs.enable ? 'Enabled' : 'Disabled'} compliance filter: ${functionArgs.filterKey}`;
+          }
+          
+          functionResults.push(functionResult);
         }
 
-        // Add a message showing the action was taken
+        // Add a message showing all actions taken
         const actionMessage = {
           role: 'assistant',
-          content: `✓ ${functionResult}\n\nThe dashboard has been updated. ${message.content || 'Let me know if you need anything else!'}`
+          content: `✓ ${functionResults.join('\n✓ ')}\n\nThe dashboard has been updated. ${message.content || 'Let me know if you need anything else!'}`
         };
         setMessages(prev => [...prev, actionMessage]);
       } else {
