@@ -6,32 +6,26 @@ const ComplianceAssistant = ({ data, filteredData, filters, complianceFilters, o
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      content: `Hello! I'm your Compliance Assistant. Here's what I can help you with:
+      content: `Hello! I'm your Compliance Assistant. I'm here to help you find and fix compliance issues in your projects.
 
-Data Analysis & Insights
-• Analyze project governance data and identify trends
-• Explain RAG statuses and compliance metrics
-• Provide statistics on filtered data
-• Answer questions about specific projects
+What I can help you with:
 
-Smart Filtering
-• Apply filters by Account, Market, Service Level, Practice, or Project Manager
-• Enable/disable compliance attribute filters
-• Show projects with specific compliance issues
-• Clear filters on request
+📊 See what's happening
+- Find projects with missing information or compliance issues
+- Check project health status (Red, Amber, Green ratings)
+- Get summaries and statistics about your projects
 
-Compliance Guidance
-• Identify compliance issues in your data
-• Explain what each compliance attribute means
-• Share policy links and guides to fix issues
-• Recommend actions to improve compliance
+🔍 Filter your data
+- Show projects from specific accounts, markets, or teams
+- Highlight projects with particular compliance problems
+- Clear filters to see everything again
 
-Examples of what you can ask:
-• "Show me Account 2 projects with missing WBS codes"
-• "Which projects have financial RAG mismatches?"
-• "How do I fix missing status reports?"
-• "Filter by Europe and show projects in planning"
-• "What compliance issues are most common?"
+📋 Fix compliance issues
+- Explain what each compliance issue means
+- Share guides and policies to help fix problems
+- Suggest actions to improve your compliance scores
+
+I can also apply filters to your dashboard based on our conversation.
 
 What would you like to know?`
     }
